@@ -6,7 +6,7 @@ set -euo pipefail
 #  Automatically enables BBR congestion control on Linux servers.
 # ---------------------------------------------------------------------------
 
-readonly VERSION="1.0.0"
+readonly SCRIPT_VERSION="1.0.0"
 readonly SYSCTL_DROP="/etc/sysctl.d/99-bbr.conf"
 readonly SYSCTL_MAIN="/etc/sysctl.conf"
 readonly MIN_KERNEL_MAJOR=4
@@ -40,7 +40,7 @@ die() { log_error "$*"; exit 1; }
 # ── Usage ──────────────────────────────────────────────────────────────────
 usage() {
     cat <<EOF
-${BOLD}bbr-setup ${VERSION}${RESET} — enable TCP BBR congestion control
+${BOLD}bbr-setup ${SCRIPT_VERSION}${RESET} — enable TCP BBR congestion control
 
 Usage: $(basename "$0") [OPTIONS]
 
@@ -65,7 +65,7 @@ parse_args() {
             --check)     CHECK_ONLY=true ;;
             --dry-run)   DRY_RUN=true ;;
             -h|--help)   usage ;;
-            -v|--version) echo "bbr-setup ${VERSION}"; exit 0 ;;
+            -v|--version) echo "bbr-setup ${SCRIPT_VERSION}"; exit 0 ;;
             *) die "Unknown option: $1. Use --help for usage." ;;
         esac
         shift
@@ -75,10 +75,9 @@ parse_args() {
 # ── Detect distro ─────────────────────────────────────────────────────────
 detect_distro() {
     local distro="unknown"
-    if   [[ -f /etc/os-release ]]; then
-        # shellcheck disable=SC1091
-        . /etc/os-release
-        distro="${ID}"
+    if [[ -f /etc/os-release ]]; then
+        # Read in a subshell to avoid variable conflicts (e.g. VERSION)
+        distro=$(. /etc/os-release && echo "${ID}")
     elif [[ -f /etc/redhat-release ]]; then
         distro="rhel"
     elif [[ -f /etc/alpine-release ]]; then
@@ -194,7 +193,7 @@ write_params() {
 
     {
         echo ""
-        echo "# TCP BBR — added by bbr-setup ${VERSION} on $(date '+%Y-%m-%d %H:%M:%S')"
+        echo "# TCP BBR — added by bbr-setup ${SCRIPT_VERSION} on $(date '+%Y-%m-%d %H:%M:%S')"
         $needs_qdisc && echo "net.core.default_qdisc = fq"
         $needs_cc    && echo "net.ipv4.tcp_congestion_control = bbr"
     } >> "$target"
@@ -257,7 +256,7 @@ main() {
     parse_args "$@"
 
     echo ""
-    printf "${CYAN}${BOLD}  TCP BBR Setup ${VERSION}${RESET}\n"
+    printf "${CYAN}${BOLD}  TCP BBR Setup ${SCRIPT_VERSION}${RESET}\n"
     echo ""
 
     # ── Root check ─────────────────────────────────────────────────────
