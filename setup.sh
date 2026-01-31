@@ -18,12 +18,12 @@ CHECK_ONLY=false
 
 # ── Colors ─────────────────────────────────────────────────────────────────
 if [[ -t 1 ]]; then
-    RED='\033[0;31m'
-    GREEN='\033[0;32m'
-    YELLOW='\033[0;33m'
-    CYAN='\033[0;36m'
-    BOLD='\033[1m'
-    RESET='\033[0m'
+    RED=$'\033[0;31m'
+    GREEN=$'\033[0;32m'
+    YELLOW=$'\033[0;33m'
+    CYAN=$'\033[0;36m'
+    BOLD=$'\033[1m'
+    RESET=$'\033[0m'
 else
     RED='' GREEN='' YELLOW='' CYAN='' BOLD='' RESET=''
 fi
@@ -281,7 +281,7 @@ main() {
     old_qdisc=$(get_current_qdisc)
 
     if show_status; then
-        log_info "${GREEN}BBR is already enabled. Nothing to do.${RESET}"
+        log_info "BBR is already enabled. Nothing to do."
         print_summary "$old_cc" "$old_qdisc" "$old_cc" "$old_qdisc"
         exit 0
     fi
@@ -321,7 +321,7 @@ main() {
     new_qdisc=$(get_current_qdisc)
 
     print_summary "$old_cc" "$old_qdisc" "$new_cc" "$new_qdisc" "$backup_path"
-    log_info "${GREEN}${BOLD}Done.${RESET}"
+    log_info "Done."
 }
 
 main "$@"
