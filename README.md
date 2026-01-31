@@ -5,13 +5,13 @@ Bash script that enables [TCP BBR](https://github.com/google/bbr) congestion con
 ## Quick start
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/user/bbr-setup/main/setup.sh | sudo bash
+curl -fsSL https://raw.githubusercontent.com/halofourteen/bbr-setup/main/setup.sh | sudo bash
 ```
 
 Or clone and run locally:
 
 ```bash
-git clone https://github.com/user/bbr-setup.git
+git clone https://github.com/halofourteen/bbr-setup.git
 cd bbr-setup
 sudo bash setup.sh
 ```
